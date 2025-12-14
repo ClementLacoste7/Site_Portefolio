@@ -1,6 +1,6 @@
 /**
- * THREE.JS BACKGROUND
- * Animation 3D de particules et formes géométriques en arrière-plan
+ * THREE.JS BACKGROUND - AQUARIUM THEME
+ * Animation 3D avec poissons GLB qui nagent et suivent la souris
  */
 
 // ===================================
@@ -8,6 +8,9 @@
 // ===================================
 const canvas = document.getElementById('bg-canvas');
 const scene = new THREE.Scene();
+
+// Couleur de fond aquatique
+scene.fog = new THREE.Fog(0x0a1628, 10, 100);
 
 // Caméra perspective
 const camera = new THREE.PerspectiveCamera(
@@ -17,6 +20,7 @@ const camera = new THREE.PerspectiveCamera(
     1000
 );
 camera.position.z = 30;
+camera.position.y = 5;
 
 // Renderer
 const renderer = new THREE.WebGLRenderer({
@@ -28,13 +32,238 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
 // ===================================
-// CRÉATION DES PARTICULES
+// CHARGEMENT DES MODÈLES GLB
+// ===================================
+const loader = new THREE.GLTFLoader();
+const fishModels = [];
+let modelsLoaded = 0;
+const totalModels = 3;
+
+// Chemins vers les modèles
+const modelPaths = [
+    'Asset/Goldfish.glb',
+    'Asset/Fish.glb',
+    'Asset/Fish 2.glb'
+];
+
+// Charger tous les modèles
+modelPaths.forEach((path, index) => {
+    loader.load(
+        path,
+        (gltf) => {
+            fishModels[index] = gltf.scene;
+            modelsLoaded++;
+
+            // Quand tous les modèles sont chargés, créer les poissons
+            if (modelsLoaded === totalModels) {
+                console.log('%c🐠 Tous les modèles de poissons chargés ! 🐠', 'color: #41609E; font-size: 14px; font-weight: bold;');
+                createFishes();
+            }
+        },
+        (xhr) => {
+            console.log(`Modèle ${index + 1}: ${(xhr.loaded / xhr.total * 100)}% chargé`);
+        },
+        (error) => {
+            console.error(`Erreur lors du chargement du modèle ${path}:`, error);
+        }
+    );
+});
+
+// ===================================
+// CLASSE POISSON
+// ===================================
+class Fish {
+    constructor(scene, model) {
+        this.scene = scene;
+        this.speed = 0.05 + Math.random() * 0.08; // Vitesse augmentée
+        this.rotationSpeed = 0.02 + Math.random() * 0.04;
+        this.swimOffset = Math.random() * Math.PI * 2;
+        this.personalSpace = 15; // Distance à laquelle le poisson réagit à la souris
+        this.swimAmplitude = 0.1 + Math.random() * 0.2; // Plus d'amplitude
+        this.tailSwimSpeed = 2 + Math.random() * 2; // Vitesse de battement
+
+        // Cloner le modèle
+        this.mesh = model.clone();
+
+        // Taille beaucoup plus petite
+        const scale = 0.08 + Math.random() * 0.12; // Réduit de ~10x
+        this.mesh.scale.set(scale, scale, scale);
+
+        // Appliquer les couleurs du thème
+        this.mesh.traverse((child) => {
+            if (child.isMesh) {
+                // Couleurs variées pour les poissons
+                const fishColors = [
+                    new THREE.Color(0x41609E), // Bleu principal
+                    new THREE.Color(0x5A7BB8), // Bleu clair
+                    new THREE.Color(0xF5E6CC), // Beige/sable
+                    new THREE.Color(0x6B8DC6), // Bleu moyen
+                    new THREE.Color(0xE8D4B8), // Beige foncé
+                    new THREE.Color(0x4A7CB8), // Bleu océan
+                ];
+
+                const color = fishColors[Math.floor(Math.random() * fishColors.length)];
+
+                if (child.material) {
+                    child.material = child.material.clone();
+                    child.material.color = color;
+                    child.material.emissive = color.clone().multiplyScalar(0.1);
+                    child.material.metalness = 0.3;
+                    child.material.roughness = 0.7;
+                }
+            }
+        });
+
+        // Position aléatoire
+        this.mesh.position.x = (Math.random() - 0.5) * 100;
+        this.mesh.position.y = (Math.random() - 0.5) * 60;
+        this.mesh.position.z = (Math.random() - 0.5) * 80;
+
+        // Direction de nage initiale
+        this.direction = new THREE.Vector3(
+            Math.random() - 0.5,
+            Math.random() - 0.5,
+            Math.random() - 0.5
+        ).normalize();
+
+        // Vitesse de suivi de la souris
+        this.mouseAttraction = 0;
+
+        // Stocker la rotation initiale pour les animations
+        this.baseRotation = {
+            x: this.mesh.rotation.x,
+            y: this.mesh.rotation.y,
+            z: this.mesh.rotation.z
+        };
+
+        scene.add(this.mesh);
+    }
+
+    update(time, mousePos3D) {
+        // Mouvement de nage ondulatoire plus prononcé
+        const swimWave = Math.sin(time * this.tailSwimSpeed + this.swimOffset) * this.swimAmplitude;
+        const swimWave2 = Math.sin(time * this.tailSwimSpeed * 1.5 + this.swimOffset) * this.swimAmplitude * 0.5;
+
+        // Appliquer le mouvement de nage sur plusieurs axes (corps qui ondule)
+        this.mesh.rotation.z = this.baseRotation.z + swimWave * 0.5;
+        this.mesh.rotation.x = this.baseRotation.x + swimWave * 0.3;
+        this.mesh.rotation.y = this.baseRotation.y + swimWave2 * 0.2;
+
+        // Calculer la distance à la souris
+        const distanceToMouse = this.mesh.position.distanceTo(mousePos3D);
+
+        // Si la souris est proche, attirer le poisson
+        if (distanceToMouse < this.personalSpace) {
+            this.mouseAttraction = 1 - (distanceToMouse / this.personalSpace);
+
+            // Direction vers la souris
+            const dirToMouse = new THREE.Vector3()
+                .subVectors(mousePos3D, this.mesh.position)
+                .normalize();
+
+            // Interpoler entre direction normale et direction vers souris
+            this.direction.lerp(dirToMouse, 0.05 * this.mouseAttraction);
+        } else {
+            this.mouseAttraction *= 0.95; // Diminuer progressivement l'attraction
+
+            // Comportement de nage aléatoire
+            if (Math.random() < 0.01) {
+                this.direction.x += (Math.random() - 0.5) * 0.3;
+                this.direction.y += (Math.random() - 0.5) * 0.3;
+                this.direction.z += (Math.random() - 0.5) * 0.3;
+                this.direction.normalize();
+            }
+        }
+
+        // Vitesse augmentée quand attiré par la souris
+        const currentSpeed = this.speed * (1 + this.mouseAttraction * 3);
+
+        // Mouvement de montée et descente aléatoire (comportement réaliste)
+        const verticalWave = Math.sin(time * 0.5 + this.swimOffset) * 0.02;
+
+        // Déplacer le poisson
+        this.mesh.position.x += this.direction.x * currentSpeed;
+        this.mesh.position.y += this.direction.y * currentSpeed + verticalWave;
+        this.mesh.position.z += this.direction.z * currentSpeed;
+
+        // Orienter le poisson dans la direction du mouvement
+        const targetRotationY = Math.atan2(this.direction.x, this.direction.z);
+        const targetRotationX = -Math.asin(this.direction.y);
+
+        // Interpoler la rotation pour un mouvement fluide et rapide
+        this.mesh.rotation.y += (targetRotationY - this.mesh.rotation.y) * 0.15;
+        this.baseRotation.x += (targetRotationX - this.baseRotation.x) * 0.08;
+
+        // Garder le poisson dans les limites
+        const bounds = 50;
+        if (Math.abs(this.mesh.position.x) > bounds) {
+            this.direction.x *= -1;
+            this.mesh.position.x = Math.sign(this.mesh.position.x) * bounds;
+        }
+        if (Math.abs(this.mesh.position.y) > 30) {
+            this.direction.y *= -1;
+            this.mesh.position.y = Math.sign(this.mesh.position.y) * 30;
+        }
+        if (Math.abs(this.mesh.position.z) > 40) {
+            this.direction.z *= -1;
+            this.mesh.position.z = Math.sign(this.mesh.position.z) * 40;
+        }
+    }
+}
+
+// ===================================
+// CRÉATION DES POISSONS
+// ===================================
+const fishes = [];
+const fishCount = 40; // Nombre total de poissons (augmenté car ils sont plus petits)
+
+function createFishes() {
+    for (let i = 0; i < fishCount; i++) {
+        // Sélectionner aléatoirement un des 3 modèles
+        const modelIndex = Math.floor(Math.random() * 3);
+        const model = fishModels[modelIndex];
+
+        if (model) {
+            fishes.push(new Fish(scene, model));
+        }
+    }
+
+    console.log(`%c🐟 ${fishes.length} poissons créés dans l'aquarium ! 🐟`, 'color: #F5E6CC; font-size: 14px; font-weight: bold;');
+}
+
+// ===================================
+// BULLES
+// ===================================
+const bubbles = [];
+const bubbleGeometry = new THREE.SphereGeometry(0.3, 8, 8);
+const bubbleMaterial = new THREE.MeshPhongMaterial({
+    color: 0xF5E6CC,
+    transparent: true,
+    opacity: 0.3,
+    shininess: 100
+});
+
+for (let i = 0; i < 50; i++) {
+    const bubble = new THREE.Mesh(bubbleGeometry, bubbleMaterial);
+    bubble.position.x = (Math.random() - 0.5) * 100;
+    bubble.position.y = (Math.random() - 0.5) * 60;
+    bubble.position.z = (Math.random() - 0.5) * 80;
+
+    bubble.userData.speed = 0.02 + Math.random() * 0.05;
+    bubble.userData.wobble = Math.random() * Math.PI * 2;
+    bubble.scale.setScalar(0.3 + Math.random() * 0.7);
+
+    scene.add(bubble);
+    bubbles.push(bubble);
+}
+
+// ===================================
+// PARTICULES DE LUMIÈRE (plancton lumineux)
 // ===================================
 const particlesGeometry = new THREE.BufferGeometry();
-const particlesCount = 1000;
+const particlesCount = 500;
 const posArray = new Float32Array(particlesCount * 3);
 
-// Positionner les particules aléatoirement
 for (let i = 0; i < particlesCount * 3; i++) {
     posArray[i] = (Math.random() - 0.5) * 100;
 }
@@ -44,12 +273,11 @@ particlesGeometry.setAttribute(
     new THREE.BufferAttribute(posArray, 3)
 );
 
-// Matériau des particules avec couleur gradient
 const particlesMaterial = new THREE.PointsMaterial({
-    size: 0.15,
-    color: 0x6366f1,
+    size: 0.1,
+    color: 0xF5E6CC,
     transparent: true,
-    opacity: 0.8,
+    opacity: 0.6,
     blending: THREE.AdditiveBlending
 });
 
@@ -57,146 +285,65 @@ const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
 scene.add(particlesMesh);
 
 // ===================================
-// CRÉATION DES FORMES GÉOMÉTRIQUES FLOTTANTES
+// ÉCLAIRAGE SOUS-MARIN
 // ===================================
-const geometries = [];
-
-// Torus
-const torusGeometry = new THREE.TorusGeometry(5, 1, 16, 100);
-const torusMaterial = new THREE.MeshStandardMaterial({
-    color: 0x6366f1,
-    wireframe: true,
-    transparent: true,
-    opacity: 0.3
-});
-const torus = new THREE.Mesh(torusGeometry, torusMaterial);
-torus.position.set(-15, 10, -10);
-scene.add(torus);
-geometries.push(torus);
-
-// Icosahedron
-const icosahedronGeometry = new THREE.IcosahedronGeometry(4, 0);
-const icosahedronMaterial = new THREE.MeshStandardMaterial({
-    color: 0x8b5cf6,
-    wireframe: true,
-    transparent: true,
-    opacity: 0.3
-});
-const icosahedron = new THREE.Mesh(icosahedronGeometry, icosahedronMaterial);
-icosahedron.position.set(15, -10, -15);
-scene.add(icosahedron);
-geometries.push(icosahedron);
-
-// Octahedron
-const octahedronGeometry = new THREE.OctahedronGeometry(3, 0);
-const octahedronMaterial = new THREE.MeshStandardMaterial({
-    color: 0xec4899,
-    wireframe: true,
-    transparent: true,
-    opacity: 0.3
-});
-const octahedron = new THREE.Mesh(octahedronGeometry, octahedronMaterial);
-octahedron.position.set(0, 15, -20);
-scene.add(octahedron);
-geometries.push(octahedron);
-
-// Tetrahedron
-const tetrahedronGeometry = new THREE.TetrahedronGeometry(3, 0);
-const tetrahedronMaterial = new THREE.MeshStandardMaterial({
-    color: 0x06b6d4,
-    wireframe: true,
-    transparent: true,
-    opacity: 0.3
-});
-const tetrahedron = new THREE.Mesh(tetrahedronGeometry, tetrahedronMaterial);
-tetrahedron.position.set(-10, -15, -12);
-scene.add(tetrahedron);
-geometries.push(tetrahedron);
-
-// ===================================
-// ÉCLAIRAGE
-// ===================================
-// Lumière ambiante
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+// Lumière ambiante douce
+const ambientLight = new THREE.AmbientLight(0x41609E, 0.5);
 scene.add(ambientLight);
 
-// Lumière directionnelle
-const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-directionalLight.position.set(10, 10, 10);
-scene.add(directionalLight);
+// Lumière directionnelle (lumière du soleil qui traverse l'eau)
+const sunLight = new THREE.DirectionalLight(0xF5E6CC, 0.8);
+sunLight.position.set(0, 50, 20);
+scene.add(sunLight);
 
-// Lumière ponctuelle avec couleur
-const pointLight1 = new THREE.PointLight(0x6366f1, 2, 50);
-pointLight1.position.set(10, 10, 10);
-scene.add(pointLight1);
+// Lumières ponctuelles pour effet bioluminescence
+const bioLight1 = new THREE.PointLight(0x41609E, 1.5, 30);
+bioLight1.position.set(15, 10, 10);
+scene.add(bioLight1);
 
-const pointLight2 = new THREE.PointLight(0xec4899, 2, 50);
-pointLight2.position.set(-10, -10, 10);
-scene.add(pointLight2);
+const bioLight2 = new THREE.PointLight(0x5A7BB8, 1.5, 30);
+bioLight2.position.set(-15, -10, 10);
+scene.add(bioLight2);
+
+const bioLight3 = new THREE.PointLight(0xF5E6CC, 1, 25);
+bioLight3.position.set(0, 0, -20);
+scene.add(bioLight3);
 
 // ===================================
-// CRÉATION D'UN RÉSEAU DE LIGNES (GRID)
+// RAYON DE LUMIÈRE (God rays effect)
 // ===================================
-function createConnectionLines() {
-    const linesMaterial = new THREE.LineBasicMaterial({
-        color: 0x6366f1,
+const lightRays = [];
+for (let i = 0; i < 5; i++) {
+    const rayGeometry = new THREE.ConeGeometry(0.5, 60, 4, 1, true);
+    const rayMaterial = new THREE.MeshBasicMaterial({
+        color: 0xF5E6CC,
         transparent: true,
-        opacity: 0.15
+        opacity: 0.05,
+        side: THREE.DoubleSide
     });
-
-    const positions = particlesGeometry.attributes.position.array;
-    const connections = [];
-
-    // Créer des connexions entre particules proches
-    for (let i = 0; i < particlesCount; i++) {
-        const x1 = positions[i * 3];
-        const y1 = positions[i * 3 + 1];
-        const z1 = positions[i * 3 + 2];
-
-        for (let j = i + 1; j < particlesCount; j++) {
-            const x2 = positions[j * 3];
-            const y2 = positions[j * 3 + 1];
-            const z2 = positions[j * 3 + 2];
-
-            const distance = Math.sqrt(
-                Math.pow(x2 - x1, 2) +
-                Math.pow(y2 - y1, 2) +
-                Math.pow(z2 - z1, 2)
-            );
-
-            // Connecter seulement les particules proches
-            if (distance < 10 && Math.random() > 0.98) {
-                const lineGeometry = new THREE.BufferGeometry();
-                const linePositions = new Float32Array([
-                    x1, y1, z1,
-                    x2, y2, z2
-                ]);
-                lineGeometry.setAttribute(
-                    'position',
-                    new THREE.BufferAttribute(linePositions, 3)
-                );
-                const line = new THREE.Line(lineGeometry, linesMaterial);
-                scene.add(line);
-                connections.push(line);
-
-                // Limiter le nombre de connexions pour les performances
-                if (connections.length > 50) break;
-            }
-        }
-        if (connections.length > 50) break;
-    }
+    const ray = new THREE.Mesh(rayGeometry, rayMaterial);
+    ray.position.set((i - 2) * 8, 30, -20 + i * 5);
+    ray.rotation.x = Math.PI;
+    scene.add(ray);
+    lightRays.push(ray);
 }
-
-createConnectionLines();
 
 // ===================================
 // INTERACTION AVEC LA SOURIS
 // ===================================
 const mouse = { x: 0, y: 0 };
+const mousePos3D = new THREE.Vector3(0, 0, 0);
 
 document.addEventListener('mousemove', (event) => {
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+    // Convertir la position 2D de la souris en position 3D dans la scène
+    mousePos3D.set(
+        mouse.x * 40,
+        mouse.y * 25,
+        10
+    );
 });
 
 // ===================================
@@ -206,40 +353,57 @@ let time = 0;
 
 function animate() {
     requestAnimationFrame(animate);
-    time += 0.001;
+    time += 0.01;
 
-    // Rotation des particules
-    particlesMesh.rotation.y += 0.0005;
-    particlesMesh.rotation.x += 0.0003;
-
-    // Animation des formes géométriques
-    geometries.forEach((geometry, index) => {
-        geometry.rotation.x += 0.003 * (index + 1);
-        geometry.rotation.y += 0.002 * (index + 1);
-
-        // Mouvement de flottement
-        geometry.position.y += Math.sin(time * 2 + index) * 0.02;
-        geometry.position.x += Math.cos(time * 2 + index) * 0.02;
+    // Animer les poissons
+    fishes.forEach(fish => {
+        fish.update(time, mousePos3D);
     });
 
-    // Rotation du torus avec effet ondulant
-    torus.rotation.x += 0.005;
-    torus.rotation.y += 0.003;
+    // Animer les bulles
+    bubbles.forEach((bubble, index) => {
+        bubble.position.y += bubble.userData.speed;
+        bubble.position.x += Math.sin(time * 2 + bubble.userData.wobble) * 0.03;
 
-    // Mouvement de la caméra en fonction de la souris
-    camera.position.x += (mouse.x * 5 - camera.position.x) * 0.05;
-    camera.position.y += (mouse.y * 5 - camera.position.y) * 0.05;
+        // Réinitialiser les bulles qui sortent de l'écran
+        if (bubble.position.y > 35) {
+            bubble.position.y = -35;
+            bubble.position.x = (Math.random() - 0.5) * 100;
+            bubble.position.z = (Math.random() - 0.5) * 80;
+        }
+
+        // Rotation douce
+        bubble.rotation.x += 0.01;
+        bubble.rotation.y += 0.01;
+    });
+
+    // Rotation lente des particules
+    particlesMesh.rotation.y += 0.0003;
+
+    // Mouvement de la caméra en fonction de la souris (plus subtil)
+    camera.position.x += (mouse.x * 3 - camera.position.x) * 0.03;
+    camera.position.y += (mouse.y * 3 + 5 - camera.position.y) * 0.03;
     camera.lookAt(scene.position);
 
-    // Animation des lumières
-    pointLight1.position.x = Math.sin(time * 3) * 20;
-    pointLight1.position.z = Math.cos(time * 3) * 20;
+    // Animation des lumières bioluminescentes
+    bioLight1.position.x = Math.sin(time * 0.5) * 20;
+    bioLight1.position.z = Math.cos(time * 0.5) * 20;
+    bioLight1.intensity = 1.2 + Math.sin(time * 2) * 0.3;
 
-    pointLight2.position.x = Math.cos(time * 2) * 20;
-    pointLight2.position.z = Math.sin(time * 2) * 20;
+    bioLight2.position.x = Math.cos(time * 0.7) * 20;
+    bioLight2.position.z = Math.sin(time * 0.7) * 20;
+    bioLight2.intensity = 1.2 + Math.cos(time * 2.5) * 0.3;
 
-    // Effet de pulsation des particules
-    particlesMaterial.opacity = 0.6 + Math.sin(time * 2) * 0.2;
+    bioLight3.intensity = 0.8 + Math.sin(time * 1.5) * 0.2;
+
+    // Animation des rayons de lumière
+    lightRays.forEach((ray, index) => {
+        ray.material.opacity = 0.03 + Math.sin(time + index) * 0.02;
+        ray.rotation.z = Math.sin(time * 0.3 + index) * 0.05;
+    });
+
+    // Pulsation des particules
+    particlesMaterial.opacity = 0.5 + Math.sin(time * 1.5) * 0.2;
 
     renderer.render(scene, camera);
 }
@@ -250,10 +414,7 @@ animate();
 // RESPONSIVE - RESIZE HANDLER
 // ===================================
 window.addEventListener('resize', () => {
-    // Mettre à jour la taille du renderer
     renderer.setSize(window.innerWidth, window.innerHeight);
-
-    // Mettre à jour l'aspect ratio de la caméra
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
 });
@@ -264,56 +425,31 @@ window.addEventListener('resize', () => {
 window.addEventListener('scroll', () => {
     const scrollY = window.scrollY;
 
-    // Rotation de la scène en fonction du scroll
-    particlesMesh.rotation.y = scrollY * 0.0003;
+    // Rotation douce de la scène
+    particlesMesh.rotation.x = scrollY * 0.0002;
 
-    // Déplacement des formes géométriques
-    geometries.forEach((geometry, index) => {
-        geometry.position.z = -10 - (scrollY * 0.01 * (index + 1));
-    });
+    // Déplacement de la caméra
+    camera.position.z = 30 + scrollY * 0.01;
 });
 
 // ===================================
 // PERFORMANCE - QUALITY ADJUSTMENT
 // ===================================
-// Réduire la qualité sur mobile pour meilleures performances
 if (window.innerWidth < 768) {
-    // Réduire le nombre de particules sur mobile
-    const mobileParticlesCount = 300;
-    const mobilePositions = new Float32Array(mobileParticlesCount * 3);
+    // Sur mobile, réduire le nombre de poissons à créer
+    const originalFishCount = fishCount;
+    fishCount = 15;
 
-    for (let i = 0; i < mobileParticlesCount * 3; i++) {
-        mobilePositions[i] = (Math.random() - 0.5) * 100;
-    }
+    console.log(`Mode mobile: ${fishCount} poissons au lieu de ${originalFishCount}`);
 
-    particlesGeometry.setAttribute(
-        'position',
-        new THREE.BufferAttribute(mobilePositions, 3)
-    );
+    // Réduire les bulles
+    bubbles.slice(25).forEach(bubble => {
+        scene.remove(bubble);
+    });
+    bubbles.length = 25;
 
-    // Augmenter la taille des particules sur mobile
-    particlesMaterial.size = 0.25;
-
-    // Réduire le pixel ratio sur mobile
     renderer.setPixelRatio(1);
 }
 
-// ===================================
-// EXPORT POUR CONTRÔLE EXTERNE (OPTIONNEL)
-// ===================================
-window.threeBackground = {
-    scene: scene,
-    camera: camera,
-    renderer: renderer,
-    particlesMesh: particlesMesh,
-    geometries: geometries,
-    pause: function() {
-        renderer.setAnimationLoop(null);
-    },
-    resume: function() {
-        renderer.setAnimationLoop(animate);
-    }
-};
-
 // Log de confirmation
-console.log('%c✨ Three.js Background Loaded ✨', 'color: #6366f1; font-size: 16px; font-weight: bold;');
+console.log('%c🌊 Aquarium Theme Loaded 🌊', 'color: #41609E; font-size: 16px; font-weight: bold;');

@@ -166,7 +166,18 @@ function validateField(field) {
     return isValid;
 }
 
-// Soumission du formulaire
+// ===================================
+// CONFIGURATION EMAILJS
+// ===================================
+// Initialiser EmailJS avec votre clé publique
+// IMPORTANT: Remplacez 'YOUR_PUBLIC_KEY' par votre clé après inscription sur emailjs.com
+(function(){
+    // Pour l'instant, on utilise une configuration par défaut
+    // Vous devrez créer un compte sur https://www.emailjs.com/ et remplacer ces valeurs
+    emailjs.init("Q_7dn9PE2KB71_kPi"); // À remplacer
+})();
+
+// Soumission du formulaire avec EmailJS
 contactForm.addEventListener('submit', (e) => {
     e.preventDefault();
 
@@ -178,17 +189,27 @@ contactForm.addEventListener('submit', (e) => {
         }
     });
 
-    if (formIsValid) {
-        // Simuler l'envoi du formulaire
-        const formStatus = document.querySelector('.form-status');
-        const submitButton = contactForm.querySelector('button[type="submit"]');
+    if (!formIsValid) {
+        return;
+    }
 
-        // Désactiver le bouton pendant l'envoi
-        submitButton.disabled = true;
-        submitButton.textContent = 'Envoi en cours...';
+    // Afficher un message de chargement
+    const formStatus = document.querySelector('.form-status');
+    const submitButton = contactForm.querySelector('button[type="submit"]');
 
-        // Simuler un délai d'envoi
-        setTimeout(() => {
+    submitButton.disabled = true;
+    submitButton.textContent = 'Envoi en cours...';
+
+    formStatus.className = 'form-status';
+    formStatus.style.display = 'block';
+    formStatus.textContent = 'Envoi du message en cours...';
+
+    // Envoyer l'email via EmailJS
+    // IMPORTANT: Remplacez 'YOUR_SERVICE_ID' et 'YOUR_TEMPLATE_ID' après configuration sur emailjs.com
+    emailjs.sendForm('service_l6o3rci', 'template_49orf57', contactForm)
+        .then(function(response) {
+            console.log('SUCCESS!', response.status, response.text);
+
             // Afficher le message de succès
             formStatus.className = 'form-status success';
             formStatus.textContent = 'Message envoyé avec succès ! Je vous répondrai bientôt.';
@@ -204,8 +225,23 @@ contactForm.addEventListener('submit', (e) => {
             setTimeout(() => {
                 formStatus.style.display = 'none';
             }, 5000);
-        }, 2000);
-    }
+
+        }, function(error) {
+            console.log('FAILED...', error);
+
+            // Afficher le message d'erreur
+            formStatus.className = 'form-status error';
+            formStatus.textContent = 'Erreur lors de l\'envoi. Veuillez réessayer ou me contacter directement par email.';
+
+            // Réactiver le bouton
+            submitButton.disabled = false;
+            submitButton.textContent = 'Envoyer le message';
+
+            // Masquer le message après 7 secondes
+            setTimeout(() => {
+                formStatus.style.display = 'none';
+            }, 7000);
+        });
 });
 
 // ===================================

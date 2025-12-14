@@ -2,19 +2,19 @@
    CSS VARIABLES & ROOT STYLES
    =================================== */
 :root {
-    /* Colors */
-    --primary-color: #6366f1;
-    --secondary-color: #8b5cf6;
-    --accent-color: #ec4899;
-    --bg-dark: #0f0f1e;
-    --bg-darker: #08081a;
-    --text-light: #ffffff;
-    --text-gray: #a1a1aa;
+    /* Colors - Thème Aquarium */
+    --primary-color: #41609E;
+    --secondary-color: #5A7BB8;
+    --accent-color: #F5E6CC;
+    --bg-dark: #0a1628;
+    --bg-darker: #05111f;
+    --text-light: #F5E6CC;
+    --text-gray: #a8b5c7;
 
-    /* Glassmorphism */
-    --glass-bg: rgba(255, 255, 255, 0.05);
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --glass-shadow: rgba(0, 0, 0, 0.3);
+    /* Glassmorphism - Aqua theme */
+    --glass-bg: rgba(65, 96, 158, 0.08);
+    --glass-border: rgba(245, 230, 204, 0.15);
+    --glass-shadow: rgba(0, 20, 40, 0.4);
 
     /* Spacing */
     --section-padding: 100px 0;
@@ -40,11 +40,15 @@ html {
 }
 
 body {
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Inter', sans-serif;
     background: var(--bg-dark);
     color: var(--text-light);
     line-height: 1.6;
     overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6, .hero-title, .section-title {
+    font-family: 'Playfair Display', serif;
 }
 
 ::selection {
