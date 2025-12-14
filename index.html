@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Portfolio professionnel - Développeur Web">
+    <title>Portfolio | Développeur Web</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <!-- Canvas pour Three.js background -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Navigation -->
+    <nav class="navbar glass-effect">
+        <div class="nav-container">
+            <a href="#home" class="logo">Portfolio</a>
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link active">Accueil</a></li>
+                <li><a href="#about" class="nav-link">À propos</a></li>
+                <li><a href="#skills" class="nav-link">Compétences</a></li>
+                <li><a href="#education" class="nav-link">Formation</a></li>
+                <li><a href="#projects" class="nav-link">Projets</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Section Hero -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <div class="hero-image glass-effect">
+                <img src="Asset/Photo_Clement.png" alt="Photo de profil" class="portrait">
+                <div class="image-glow"></div>
+            </div>
+            <div class="hero-text">
+                <h1 class="hero-title">
+                    <span class="greeting">Bonjour, je suis</span>
+                    <span class="name">Jean Dupont</span>
+                </h1>
+                <p class="hero-subtitle">Développeur Web Full Stack</p>
+                <p class="hero-description">
+                    Passionné par la création d'expériences web modernes et innovantes.
+                    Je transforme des idées en solutions digitales élégantes et performantes.
+                </p>
+                <div class="hero-buttons">
+                    <a href="#projects" class="btn btn-primary">Voir mes projets</a>
+                    <a href="Asset/CV 2025 YNOV.pdf" download class="btn btn-secondary">Télécharger CV</a>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <div class="mouse">
+                <div class="wheel"></div>
+            </div>
+            <p>Défiler</p>
+        </div>
+    </section>
+
+    <!-- Section À propos -->
+    <section id="about" class="section">
+        <div class="container">
+            <h2 class="section-title fade-in">À propos de moi</h2>
+            <div class="about-content">
+                <div class="about-text glass-effect slide-in-left">
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
+                        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                        exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                    </p>
+                    <p>
+                        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
+                        fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+                        culpa qui officia deserunt mollit anim id est laborum.
+                    </p>
+                    <div class="interests">
+                        <h3>Centres d'intérêt</h3>
+                        <ul>
+                            <li>💻 Développement web moderne</li>
+                            <li>🎨 Design UI/UX</li>
+                            <li>🚀 Technologies émergentes</li>
+                            <li>📚 Apprentissage continu</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="about-stats slide-in-right">
+                    <div class="stat-card glass-effect">
+                        <div class="stat-number">3+</div>
+                        <div class="stat-label">Années d'expérience</div>
+                    </div>
+                    <div class="stat-card glass-effect">
+                        <div class="stat-number">50+</div>
+                        <div class="stat-label">Projets réalisés</div>
+                    </div>
+                    <div class="stat-card glass-effect">
+                        <div class="stat-number">30+</div>
+                        <div class="stat-label">Clients satisfaits</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Compétences -->
+    <section id="skills" class="section">
+        <div class="container">
+            <h2 class="section-title fade-in">Compétences</h2>
+            <div class="skills-grid">
+                <!-- Frontend -->
+                <div class="skill-category glass-effect scale-in">
+                    <h3>Frontend</h3>
+                    <div class="skill-item">
+                        <div class="skill-info">
+                            <span>HTML5 / CSS3</span>
+                            <span>90%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-progress="90"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-info">
+                            <span>JavaScript</span>
+                            <span>85%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-progress="85"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-info">
+                            <span>React.js</span>
+                            <span>80%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-progress="80"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-info">
+                            <span>Vue.js</span>
+                            <span>75%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-progress="75"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Backend -->
+                <div class="skill-category glass-effect scale-in">
+                    <h3>Backend</h3>
+                    <div class="skill-item">
+                        <div class="skill-info">
+                            <span>Node.js</span>
+                            <span>80%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-progress="80"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-info">
+                            <span>Python</span>
+                            <span>75%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-progress="75"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-info">
+                            <span>PHP</span>
+                            <span>70%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-progress="70"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-info">
+                            <span>MongoDB</span>
+                            <span>75%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-progress="75"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Outils -->
+                <div class="skill-category glass-effect scale-in">
+                    <h3>Outils & Autres</h3>
+                    <div class="skill-item">
+                        <div class="skill-info">
+                            <span>Git / GitHub</span>
+                            <span>85%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-progress="85"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-info">
+                            <span>Figma / Adobe XD</span>
+                            <span>70%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-progress="70"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-info">
+                            <span>Docker</span>
+                            <span>65%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-progress="65"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-info">
+                            <span>Three.js</span>
+                            <span>60%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-progress="60"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Formation -->
+    <section id="education" class="section">
+        <div class="container">
+            <h2 class="section-title fade-in">Formation</h2>
+            <div class="education-timeline">
+                <div class="timeline-item glass-effect slide-in-left">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">2023 - 2025</div>
+                        <h3>Master en Informatique</h3>
+                        <h4>YNOV Campus</h4>
+                        <p>
+                            Spécialisation en développement web et applications mobiles.
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        </p>
+                    </div>
+                </div>
+                <div class="timeline-item glass-effect slide-in-right">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">2020 - 2023</div>
+                        <h3>Licence Informatique</h3>
+                        <h4>Université de Paris</h4>
+                        <p>
+                            Formation générale en informatique et développement logiciel.
+                            Duis aute irure dolor in reprehenderit.
+                        </p>
+                    </div>
+                </div>
+                <div class="timeline-item glass-effect slide-in-left">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">2018 - 2020</div>
+                        <h3>DUT Informatique</h3>
+                        <h4>IUT de Lyon</h4>
+                        <p>
+                            Bases du développement et de l'administration système.
+                            Sed do eiusmod tempor incididunt ut labore.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Projets -->
+    <section id="projects" class="section">
+        <div class="container">
+            <h2 class="section-title fade-in">Mes Projets</h2>
+            <div class="projects-grid">
+                <div class="project-card glass-effect scale-in">
+                    <div class="project-image">
+                        <img src="https://via.placeholder.com/600x400/1a1a2e/ffffff?text=Projet+1" alt="Projet 1">
+                        <div class="project-overlay">
+                            <a href="#" class="project-link">Voir plus</a>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3>Application E-commerce</h3>
+                        <p>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                            Plateforme de vente en ligne avec panier et paiement sécurisé.
+                        </p>
+                        <div class="project-tags">
+                            <span>React</span>
+                            <span>Node.js</span>
+                            <span>MongoDB</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card glass-effect scale-in">
+                    <div class="project-image">
+                        <img src="https://via.placeholder.com/600x400/16213e/ffffff?text=Projet+2" alt="Projet 2">
+                        <div class="project-overlay">
+                            <a href="#" class="project-link">Voir plus</a>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3>Dashboard Analytique</h3>
+                        <p>
+                            Tableau de bord interactif avec visualisation de données en temps réel.
+                            Sed do eiusmod tempor incididunt.
+                        </p>
+                        <div class="project-tags">
+                            <span>Vue.js</span>
+                            <span>D3.js</span>
+                            <span>Express</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card glass-effect scale-in">
+                    <div class="project-image">
+                        <img src="https://via.placeholder.com/600x400/0f3460/ffffff?text=Projet+3" alt="Projet 3">
+                        <div class="project-overlay">
+                            <a href="#" class="project-link">Voir plus</a>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3>Portfolio Interactif 3D</h3>
+                        <p>
+                            Site portfolio avec animations 3D et effets de parallaxe.
+                            Ut enim ad minim veniam quis nostrud.
+                        </p>
+                        <div class="project-tags">
+                            <span>Three.js</span>
+                            <span>GSAP</span>
+                            <span>WebGL</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card glass-effect scale-in">
+                    <div class="project-image">
+                        <img src="https://via.placeholder.com/600x400/533483/ffffff?text=Projet+4" alt="Projet 4">
+                        <div class="project-overlay">
+                            <a href="#" class="project-link">Voir plus</a>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3>Application Mobile</h3>
+                        <p>
+                            Application mobile cross-platform pour la gestion de tâches.
+                            Duis aute irure dolor in reprehenderit.
+                        </p>
+                        <div class="project-tags">
+                            <span>React Native</span>
+                            <span>Firebase</span>
+                            <span>Redux</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card glass-effect scale-in">
+                    <div class="project-image">
+                        <img src="https://via.placeholder.com/600x400/2d4263/ffffff?text=Projet+5" alt="Projet 5">
+                        <div class="project-overlay">
+                            <a href="#" class="project-link">Voir plus</a>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3>API REST</h3>
+                        <p>
+                            API backend robuste avec authentification JWT et documentation Swagger.
+                            Excepteur sint occaecat cupidatat.
+                        </p>
+                        <div class="project-tags">
+                            <span>Node.js</span>
+                            <span>Express</span>
+                            <span>PostgreSQL</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card glass-effect scale-in">
+                    <div class="project-image">
+                        <img src="https://via.placeholder.com/600x400/1a1a2e/ffffff?text=Projet+6" alt="Projet 6">
+                        <div class="project-overlay">
+                            <a href="#" class="project-link">Voir plus</a>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3>Site Vitrine Corporate</h3>
+                        <p>
+                            Site vitrine moderne avec animations et optimisation SEO.
+                            Lorem ipsum dolor sit amet consectetur.
+                        </p>
+                        <div class="project-tags">
+                            <span>HTML5</span>
+                            <span>CSS3</span>
+                            <span>JavaScript</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Contact -->
+    <section id="contact" class="section">
+        <div class="container">
+            <h2 class="section-title fade-in">Contactez-moi</h2>
+            <div class="contact-content">
+                <div class="contact-info slide-in-left">
+                    <div class="contact-item glass-effect">
+                        <div class="contact-icon">📧</div>
+                        <div class="contact-details">
+                            <h3>Email</h3>
+                            <p>contact@exemple.com</p>
+                        </div>
+                    </div>
+                    <div class="contact-item glass-effect">
+                        <div class="contact-icon">📱</div>
+                        <div class="contact-details">
+                            <h3>Téléphone</h3>
+                            <p>+33 6 12 34 56 78</p>
+                        </div>
+                    </div>
+                    <div class="contact-item glass-effect">
+                        <div class="contact-icon">📍</div>
+                        <div class="contact-details">
+                            <h3>Localisation</h3>
+                            <p>Paris, France</p>
+                        </div>
+                    </div>
+                    <div class="social-links">
+                        <a href="#" class="social-link glass-effect">LinkedIn</a>
+                        <a href="#" class="social-link glass-effect">GitHub</a>
+                        <a href="#" class="social-link glass-effect">Twitter</a>
+                    </div>
+                </div>
+
+                <form class="contact-form glass-effect slide-in-right" id="contact-form">
+                    <div class="form-group">
+                        <input type="text" id="name" name="name" required>
+                        <label for="name">Nom complet</label>
+                        <span class="error-message"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="email" name="email" required>
+                        <label for="email">Email</label>
+                        <span class="error-message"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="subject" name="subject" required>
+                        <label for="subject">Sujet</label>
+                        <span class="error-message"></span>
+                    </div>
+                    <div class="form-group">
+                        <textarea id="message" name="message" rows="5" required></textarea>
+                        <label for="message">Message</label>
+                        <span class="error-message"></span>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Envoyer le message</button>
+                    <div class="form-status"></div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer glass-effect">
+        <div class="container">
+            <p>&copy; 2025 Portfolio. Tous droits réservés.</p>
+            <p>Conçu avec ❤️ et Three.js</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/three-background.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
