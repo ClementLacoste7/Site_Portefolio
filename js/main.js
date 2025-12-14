@@ -69,11 +69,6 @@ const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
             entry.target.classList.add('visible');
-
-            // Animation des barres de compétences
-            if (entry.target.classList.contains('skill-category')) {
-                animateSkillBars(entry.target);
-            }
         }
     });
 }, observerOptions);
@@ -83,20 +78,6 @@ const animatedElements = document.querySelectorAll(
     '.fade-in, .slide-in-left, .slide-in-right, .scale-in'
 );
 animatedElements.forEach(el => observer.observe(el));
-
-// ===================================
-// ANIMATION DES BARRES DE COMPÉTENCES
-// ===================================
-function animateSkillBars(skillCategory) {
-    const skillBars = skillCategory.querySelectorAll('.skill-progress');
-    skillBars.forEach((bar, index) => {
-        setTimeout(() => {
-            const progress = bar.getAttribute('data-progress');
-            bar.style.setProperty('--progress-width', `${progress}%`);
-            bar.classList.add('animate');
-        }, index * 100);
-    });
-}
 
 // ===================================
 // SMOOTH SCROLL POUR LES LIENS D'ANCRE
