@@ -618,9 +618,9 @@ h1, h2, h3, h4, h5, h6, .hero-title, .section-title {
 /* Carrousel de projets */
 .projects-carousel-container {
     position: relative;
-    max-width: 900px;
+    max-width: 750px;
     margin: 0 auto;
-    padding: 0 70px;
+    padding: 0 80px;
 }
 
 .projects-carousel {
@@ -629,14 +629,17 @@ h1, h2, h3, h4, h5, h6, .hero-title, .section-title {
     position: relative;
     transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     border-radius: 20px;
+    width: 100%;
 }
 
 .projects-carousel .project-card {
     min-width: 100%;
+    width: 100%;
     flex-shrink: 0;
-    max-height: 600px;
     display: flex;
     flex-direction: column;
+    box-sizing: border-box;
+    height: auto;
 }
 
 /* Boutons du carrousel */
@@ -712,21 +715,29 @@ h1, h2, h3, h4, h5, h6, .hero-title, .section-title {
 .project-image {
     position: relative;
     overflow: hidden;
-    height: 200px;
+    height: 180px;
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-darker);
 }
 
 .project-image img {
-    width: 100%;
-    height: 100%;
+    max-width: 90%;
+    max-height: 90%;
     object-fit: contain;
-    background: var(--bg-darker);
     transition: var(--transition-smooth);
 }
 
+.projects-carousel .project-image {
+    height: 180px;
+}
+
 .projects-carousel .project-image img {
+    max-width: 85%;
+    max-height: 85%;
     object-fit: contain;
-    padding: 20px;
 }
 
 .project-overlay {
@@ -776,29 +787,32 @@ h1, h2, h3, h4, h5, h6, .hero-title, .section-title {
 }
 
 .project-content {
-    padding: 25px;
+    padding: 20px 25px 25px;
     flex: 1;
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .projects-carousel .project-content {
-    max-height: 350px;
+    padding: 20px;
 }
 
 .project-content h3 {
-    font-size: 1.3rem;
-    margin-bottom: 12px;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
     color: var(--text-light);
+    word-wrap: break-word;
 }
 
 .project-content p {
     color: var(--text-gray);
-    margin-bottom: 15px;
-    line-height: 1.5;
-    font-size: 0.95rem;
-    flex: 1;
+    margin-bottom: 12px;
+    line-height: 1.45;
+    font-size: 0.9rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .project-tags {
