@@ -247,8 +247,8 @@ contactForm.addEventListener('submit', (e) => {
 // ===================================
 // ANIMATION DES CARTES PROJET
 // ===================================
-const projectCards = document.querySelectorAll('.project-card');
-projectCards.forEach(card => {
+const allProjectCards = document.querySelectorAll('.project-card');
+allProjectCards.forEach(card => {
     card.addEventListener('mouseenter', function() {
         this.style.transform = 'translateY(-10px) rotateX(5deg)';
     });
@@ -396,11 +396,161 @@ const scrollHandler = throttle(() => {
 window.addEventListener('scroll', scrollHandler);
 
 // ===================================
-// DARK MODE TOGGLE (BONUS - OPTIONNEL)
+// COMPTEUR DE VISITES (LOCAL STORAGE)
+// ===================================
+function initVisitCounter() {
+    let visits = localStorage.getItem('portfolioVisits');
+
+    if (visits === null) {
+        visits = 1;
+    } else {
+        visits = parseInt(visits) + 1;
+    }
+
+    localStorage.setItem('portfolioVisits', visits);
+
+    // Animation du compteur
+    const counterElement = document.getElementById('visit-counter');
+    if (counterElement) {
+        let currentCount = 0;
+        const increment = visits / 50;
+        const timer = setInterval(() => {
+            currentCount += increment;
+            if (currentCount >= visits) {
+                counterElement.textContent = visits;
+                clearInterval(timer);
+            } else {
+                counterElement.textContent = Math.floor(currentCount);
+            }
+        }, 20);
+    }
+}
+
+// Initialiser le compteur au chargement
+window.addEventListener('load', initVisitCounter);
+
+// ===================================
+// CARROUSEL DE PROJETS
+// ===================================
+const carousel = document.querySelector('.projects-carousel');
+const projectCards = document.querySelectorAll('.projects-carousel .project-card');
+const prevBtn = document.querySelector('.carousel-prev');
+const nextBtn = document.querySelector('.carousel-next');
+const dots = document.querySelectorAll('.carousel-dots .dot');
+
+let currentSlide = 0;
+let filteredProjects = Array.from(projectCards);
+
+function updateCarousel() {
+    const offset = -currentSlide * 100;
+    carousel.style.transform = `translateX(${offset}%)`;
+
+    // Mettre à jour les dots
+    dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentSlide);
+    });
+}
+
+function nextSlide() {
+    currentSlide = (currentSlide + 1) % filteredProjects.length;
+    updateCarousel();
+}
+
+function prevSlide() {
+    currentSlide = (currentSlide - 1 + filteredProjects.length) % filteredProjects.length;
+    updateCarousel();
+}
+
+// Event listeners pour les boutons
+if (prevBtn) prevBtn.addEventListener('click', prevSlide);
+if (nextBtn) nextBtn.addEventListener('click', nextSlide);
+
+// Event listeners pour les dots
+dots.forEach((dot, index) => {
+    dot.addEventListener('click', () => {
+        currentSlide = index;
+        updateCarousel();
+    });
+});
+
+// Auto-play du carrousel (optionnel)
+let autoPlayInterval = setInterval(nextSlide, 5000);
+
+// Pause au survol
+if (carousel) {
+    carousel.addEventListener('mouseenter', () => {
+        clearInterval(autoPlayInterval);
+    });
+
+    carousel.addEventListener('mouseleave', () => {
+        autoPlayInterval = setInterval(nextSlide, 5000);
+    });
+}
+
+// Support du swipe sur mobile
+let touchStartX = 0;
+let touchEndX = 0;
+
+if (carousel) {
+    carousel.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    });
+
+    carousel.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    });
+}
+
+function handleSwipe() {
+    if (touchEndX < touchStartX - 50) {
+        nextSlide();
+    }
+    if (touchEndX > touchStartX + 50) {
+        prevSlide();
+    }
+}
+
+// ===================================
+// SYSTÈME DE FILTRAGE DES PROJETS
+// ===================================
+const filterButtons = document.querySelectorAll('.filter-btn');
+
+filterButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        // Retirer la classe active de tous les boutons
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+
+        // Ajouter la classe active au bouton cliqué
+        button.classList.add('active');
+
+        const filterValue = button.getAttribute('data-filter');
+
+        // Filtrer les projets
+        projectCards.forEach(card => {
+            const category = card.getAttribute('data-category');
+
+            if (filterValue === 'all' || category === filterValue) {
+                card.style.display = 'block';
+                card.classList.add('scale-in');
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        // Réinitialiser le carrousel
+        currentSlide = 0;
+        updateCarousel();
+    });
+});
+
+// ===================================
+// DARK MODE TOGGLE
 // ===================================
 const darkModeToggle = document.createElement('button');
 darkModeToggle.className = 'dark-mode-toggle glass-effect';
-darkModeToggle.innerHTML = '🌙';
+darkModeToggle.innerHTML = '☀️';
+darkModeToggle.setAttribute('aria-label', 'Toggle dark/light mode');
 darkModeToggle.style.cssText = `
     position: fixed;
     bottom: 30px;
@@ -412,9 +562,35 @@ darkModeToggle.style.cssText = `
     font-size: 1.5rem;
     cursor: pointer;
     z-index: 1000;
-    display: none; /* Désactivé par défaut car déjà en dark mode */
+    transition: transform 0.3s ease;
 `;
 document.body.appendChild(darkModeToggle);
+
+// Charger la préférence sauvegardée
+const currentTheme = localStorage.getItem('theme') || 'dark';
+if (currentTheme === 'light') {
+    document.body.classList.add('light-mode');
+    darkModeToggle.innerHTML = '🌙';
+}
+
+// Toggle du mode
+darkModeToggle.addEventListener('click', () => {
+    document.body.classList.toggle('light-mode');
+
+    if (document.body.classList.contains('light-mode')) {
+        darkModeToggle.innerHTML = '🌙';
+        localStorage.setItem('theme', 'light');
+    } else {
+        darkModeToggle.innerHTML = '☀️';
+        localStorage.setItem('theme', 'dark');
+    }
+
+    // Animation du bouton
+    darkModeToggle.style.transform = 'rotate(360deg)';
+    setTimeout(() => {
+        darkModeToggle.style.transform = 'rotate(0deg)';
+    }, 300);
+});
 
 // ===================================
 // CONSOLE SIGNATURE

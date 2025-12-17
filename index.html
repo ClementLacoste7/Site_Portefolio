@@ -118,6 +118,10 @@
                         <div class="stat-label">Projets réalisés</div>
                     </div>
                     <div class="stat-card glass-effect">
+                        <div class="stat-number" id="visit-counter">0</div>
+                        <div class="stat-label">Visites</div>
+                    </div>
+                    <div class="stat-card glass-effect">
                         <div class="stat-number">✓</div>
                         <div class="stat-label">Travail d'équipe</div>
                     </div>
@@ -212,75 +216,102 @@
     <section id="projects" class="section">
         <div class="container">
             <h2 class="section-title fade-in">Mes Projets</h2>
-            <div class="projects-grid">
-                <div class="project-card glass-effect scale-in">
-                    <div class="project-image">
-                        <img src="Asset/Logo Velorya.png" alt="Projet Red - Velorya">
-                        <div class="project-overlay">
-                            <a href="https://github.com/ClementLacoste7" target="_blank" class="project-link">Voir sur GitHub</a>
+
+            <!-- Filtres de projets -->
+            <div class="project-filters fade-in">
+                <button class="filter-btn glass-effect active" data-filter="all">Tous</button>
+                <button class="filter-btn glass-effect" data-filter="frontend">Frontend</button>
+                <button class="filter-btn glass-effect" data-filter="backend">Backend</button>
+                <button class="filter-btn glass-effect" data-filter="gamedev">Game Dev</button>
+            </div>
+
+            <!-- Carrousel de projets -->
+            <div class="projects-carousel-container">
+                <button class="carousel-btn carousel-prev glass-effect" aria-label="Projet précédent">
+                    &#10094;
+                </button>
+
+                <div class="projects-carousel">
+                    <div class="project-card glass-effect scale-in" data-category="backend">
+                        <div class="project-image">
+                            <img src="Asset/Logo Velorya.png" alt="Projet Red - Velorya" loading="lazy">
+                            <div class="project-overlay">
+                                <a href="https://github.com/ClementLacoste7" target="_blank" class="project-link">Voir sur GitHub</a>
+                            </div>
+                        </div>
+                        <div class="project-content">
+                            <h3>Projet Red - Velorya</h3>
+                            <p>
+                                Jeu RPG fantasy jouable directement dans le terminal, développé en Golang.
+                                Le joueur explore un univers médiéval, combat des ennemis et progresse
+                                dans une aventure textuelle immersive.
+                            </p>
+                            <div class="project-tags">
+                                <span>Golang</span>
+                                <span>Terminal</span>
+                                <span>RPG</span>
+                                <span>Game Dev</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="project-content">
-                        <h3>Projet Red - Velorya</h3>
-                        <p>
-                            Jeu RPG fantasy jouable directement dans le terminal, développé en Golang.
-                            Le joueur explore un univers médiéval, combat des ennemis et progresse
-                            dans une aventure textuelle immersive.
-                        </p>
-                        <div class="project-tags">
-                            <span>Golang</span>
-                            <span>Terminal</span>
-                            <span>RPG</span>
-                            <span>Game Dev</span>
+
+                    <div class="project-card glass-effect scale-in" data-category="gamedev">
+                        <div class="project-image">
+                            <img src="Asset/logo burger rush.jpg" alt="Burger Rush" loading="lazy">
+                            <div class="project-overlay">
+                                <a href="#" class="project-link">Projet en cours</a>
+                            </div>
+                        </div>
+                        <div class="project-content">
+                            <h3>Burger Rush</h3>
+                            <p>
+                                Jeu mobile de type clicker sur le thème de la restauration rapide.
+                                Le joueur gère son restaurant, améliore ses équipements et développe
+                                son empire culinaire à travers un gameplay addictif.
+                            </p>
+                            <div class="project-tags">
+                                <span>Mobile</span>
+                                <span>Clicker</span>
+                                <span>Game Dev</span>
+                                <span>Casual Game</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="project-card glass-effect scale-in" data-category="frontend">
+                        <div class="project-image">
+                            <img src="Asset/Logo site portefolio.png" alt="Portfolio Web" loading="lazy">
+                            <div class="project-overlay">
+                                <a href="#" class="project-link">Vous êtes ici</a>
+                            </div>
+                        </div>
+                        <div class="project-content">
+                            <h3>Portfolio Personnel</h3>
+                            <p>
+                                Site portfolio moderne avec design glassmorphism, animations fluides et
+                                background 3D interactif utilisant Three.js. Développé avec HTML5, CSS3
+                                et JavaScript Vanilla pour une performance optimale.
+                            </p>
+                            <div class="project-tags">
+                                <span>HTML5</span>
+                                <span>CSS3</span>
+                                <span>JavaScript</span>
+                                <span>Three.js</span>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="project-card glass-effect scale-in">
-                    <div class="project-image">
-                        <img src="Asset/logo burger rush.jpg" alt="Burger Rush">
-                        <div class="project-overlay">
-                            <a href="#" class="project-link">Projet en cours</a>
-                        </div>
-                    </div>
-                    <div class="project-content">
-                        <h3>Burger Rush</h3>
-                        <p>
-                            Jeu mobile de type clicker sur le thème de la restauration rapide.
-                            Le joueur gère son restaurant, améliore ses équipements et développe
-                            son empire culinaire à travers un gameplay addictif.
-                        </p>
-                        <div class="project-tags">
-                            <span>Mobile</span>
-                            <span>Clicker</span>
-                            <span>Game Dev</span>
-                            <span>Casual Game</span>
-                        </div>
-                    </div>
-                </div>
+                <button class="carousel-btn carousel-next glass-effect" aria-label="Projet suivant">
+                    &#10095;
+                </button>
+            </div>
 
-                <div class="project-card glass-effect scale-in">
-                    <div class="project-image">
-                        <img src="Asset/Logo site portefolio.png" alt="Portfolio Web">
-                        <div class="project-overlay">
-                            <a href="#" class="project-link">Vous êtes ici</a>
-                        </div>
-                    </div>
-                    <div class="project-content">
-                        <h3>Portfolio Personnel</h3>
-                        <p>
-                            Site portfolio moderne avec design glassmorphism, animations fluides et
-                            background 3D interactif utilisant Three.js. Développé avec HTML5, CSS3
-                            et JavaScript Vanilla pour une performance optimale.
-                        </p>
-                        <div class="project-tags">
-                            <span>HTML5</span>
-                            <span>CSS3</span>
-                            <span>JavaScript</span>
-                            <span>Three.js</span>
-                        </div>
-                    </div>
-                </div>
+            <!-- Indicateurs du carrousel -->
+            <div class="carousel-dots">
+                <span class="dot active" data-slide="0"></span>
+                <span class="dot" data-slide="1"></span>
+                <span class="dot" data-slide="2"></span>
             </div>
         </div>
     </section>

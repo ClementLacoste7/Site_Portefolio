@@ -5,7 +5,9 @@
       "Bash(dir /S /B)",
       "Bash(findstr:*)",
       "Bash(chmod:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(git remote add:*)",
+      "Bash(git push:*)"
     ]
   }
 }
