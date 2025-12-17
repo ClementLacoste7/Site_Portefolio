@@ -624,12 +624,12 @@ h1, h2, h3, h4, h5, h6, .hero-title, .section-title {
 }
 
 .projects-carousel {
-    display: flex;
+    display: block;
     overflow: hidden;
     position: relative;
-    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     border-radius: 20px;
     width: 100%;
+    height: auto;
 }
 
 .projects-carousel .project-card {
@@ -640,6 +640,14 @@ h1, h2, h3, h4, h5, h6, .hero-title, .section-title {
     flex-direction: column;
     box-sizing: border-box;
     height: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.projects-carousel .project-card:first-child {
+    position: relative;
 }
 
 /* Boutons du carrousel */

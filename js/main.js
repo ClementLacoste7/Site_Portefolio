@@ -439,25 +439,52 @@ const nextBtn = document.querySelector('.carousel-next');
 const dots = document.querySelectorAll('.carousel-dots .dot');
 
 let currentSlide = 0;
-let filteredProjects = Array.from(projectCards);
+const totalSlides = projectCards.length;
+
+function getVisibleProjects() {
+    return Array.from(projectCards).filter(card => card.style.display !== 'none');
+}
 
 function updateCarousel() {
-    const offset = -currentSlide * 100;
-    carousel.style.transform = `translateX(${offset}%)`;
+    const visibleProjects = getVisibleProjects();
+    const visibleCount = visibleProjects.length;
+
+    // S'assurer que currentSlide ne dépasse pas le nombre de projets visibles
+    if (currentSlide >= visibleCount) {
+        currentSlide = 0;
+    }
+
+    // Repositionner chaque projet en fonction de son index parmi les visibles
+    let visibleIndex = 0;
+    projectCards.forEach(card => {
+        if (card.style.display !== 'none') {
+            const position = (visibleIndex - currentSlide) * 100;
+            card.style.transform = `translateX(${position}%)`;
+            card.style.transition = 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+            visibleIndex++;
+        }
+    });
 
     // Mettre à jour les dots
     dots.forEach((dot, index) => {
-        dot.classList.toggle('active', index === currentSlide);
+        if (index < visibleCount) {
+            dot.style.display = 'block';
+            dot.classList.toggle('active', index === currentSlide);
+        } else {
+            dot.style.display = 'none';
+        }
     });
 }
 
 function nextSlide() {
-    currentSlide = (currentSlide + 1) % filteredProjects.length;
+    const visibleCount = getVisibleProjects().length;
+    currentSlide = (currentSlide + 1) % visibleCount;
     updateCarousel();
 }
 
 function prevSlide() {
-    currentSlide = (currentSlide - 1 + filteredProjects.length) % filteredProjects.length;
+    const visibleCount = getVisibleProjects().length;
+    currentSlide = (currentSlide - 1 + visibleCount) % visibleCount;
     updateCarousel();
 }
 
