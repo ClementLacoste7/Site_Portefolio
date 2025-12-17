@@ -5,6 +5,7 @@
 Portfolio personnel moderne créé avec **HTML5, CSS3, JavaScript Vanilla et Three.js** dans le cadre d'un projet académique à YNOV Campus Rennes.
 
 **Technologies utilisées :**
+
 - HTML5
 - CSS3 (Glassmorphism design)
 - JavaScript Vanilla
@@ -18,6 +19,7 @@ Portfolio personnel moderne créé avec **HTML5, CSS3, JavaScript Vanilla et Thr
 ### 🎯 Fonctionnalités de Base (Obligatoires)
 
 #### Structure de base
+
 - ✅ Page HTML personnelle avec sections multiples
   - Accueil (Hero)
   - À propos
@@ -29,6 +31,7 @@ Portfolio personnel moderne créé avec **HTML5, CSS3, JavaScript Vanilla et Thr
 - ✅ Background 3D interactif avec Three.js
 
 #### Interactivité
+
 - ✅ **Formulaire de contact fonctionnel** avec EmailJS
   - Validation en temps réel
   - Gestion des erreurs
@@ -118,18 +121,21 @@ Site_Portefolio/
 ## 🔧 Configuration & Installation
 
 ### Prérequis
+
 - Navigateur web moderne (Chrome, Firefox, Safari, Edge)
 - Serveur local ou hébergement web (GitHub Pages, Netlify, Vercel)
 
 ### Installation locale
 
 1. **Cloner le repository**
+
 ```bash
 git clone https://github.com/ClementLacoste7/Site_Portefolio.git
 cd Site_Portefolio
 ```
 
 2. **Ouvrir avec un serveur local**
+
 ```bash
 # Avec Python 3
 python -m http.server 8000
@@ -141,6 +147,7 @@ npx http-server
 ```
 
 3. **Accéder au site**
+
 ```
 http://localhost:8000
 ```
@@ -150,6 +157,7 @@ http://localhost:8000
 Voir le fichier `CONFIGURATION_EMAIL.md` pour les instructions détaillées.
 
 **Résumé :**
+
 - Service ID : `service_l6o3rci`
 - Template ID : `template_49orf57`
 - Public Key : `Q_7dn9PE2KB71_kPi`
@@ -161,11 +169,13 @@ Voir le fichier `CONFIGURATION_EMAIL.md` pour les instructions détaillées.
 ### 1. Carrousel de Projets
 
 **Fichiers concernés :**
+
 - `index.html` (lignes 211-313)
 - `js/main.js` (lignes 432-512)
 - `css/style.css` (lignes 618-694)
 
 **Fonctionnement :**
+
 - Auto-play toutes les 5 secondes
 - Navigation par flèches gauche/droite
 - Navigation par dots
@@ -173,65 +183,74 @@ Voir le fichier `CONFIGURATION_EMAIL.md` pour les instructions détaillées.
 - Pause au survol
 
 **Code principal :**
+
 ```javascript
 // Fonction de mise à jour du carrousel
 function updateCarousel() {
-    const offset = -currentSlide * 100;
-    carousel.style.transform = `translateX(${offset}%)`;
+  const offset = -currentSlide * 100;
+  carousel.style.transform = `translateX(${offset}%)`;
 }
 ```
 
 ### 2. Système de Filtrage
 
 **Fichiers concernés :**
+
 - `index.html` (lignes 217-222)
 - `js/main.js` (lignes 514-545)
 - `css/style.css` (lignes 589-616)
 
 **Catégories disponibles :**
+
 - Tous (all)
 - Frontend (frontend)
 - Backend (backend)
 - Game Dev (gamedev)
 
 **Ajout d'un projet :**
+
 ```html
 <div class="project-card glass-effect scale-in" data-category="frontend">
-    <!-- Contenu du projet -->
+  <!-- Contenu du projet -->
 </div>
 ```
 
 ### 3. Mode Dark/Light
 
 **Fichiers concernés :**
+
 - `js/main.js` (lignes 547-593)
 - `css/style.css` (lignes 1007-1053)
 
 **LocalStorage :**
+
 ```javascript
 // Sauvegarder la préférence
-localStorage.setItem('theme', 'light');
+localStorage.setItem("theme", "light");
 
 // Charger la préférence
-const currentTheme = localStorage.getItem('theme') || 'dark';
+const currentTheme = localStorage.getItem("theme") || "dark";
 ```
 
 ### 4. Compteur de Visites
 
 **Fichiers concernés :**
+
 - `index.html` (ligne 121)
 - `js/main.js` (lignes 398-430)
 
 **Fonctionnement :**
+
 - Incrémentation automatique à chaque visite
 - Animation de comptage progressive
 - Persistance via LocalStorage
 
 **Code :**
+
 ```javascript
-let visits = localStorage.getItem('portfolioVisits');
+let visits = localStorage.getItem("portfolioVisits");
 visits = visits === null ? 1 : parseInt(visits) + 1;
-localStorage.setItem('portfolioVisits', visits);
+localStorage.setItem("portfolioVisits", visits);
 ```
 
 ---
@@ -240,11 +259,11 @@ localStorage.setItem('portfolioVisits', visits);
 
 ### Breakpoints
 
-| Breakpoint | Cible | Modifications principales |
-|------------|-------|---------------------------|
-| 1024px | Tablettes | Grilles en 1 colonne |
-| 768px | Mobile | Menu hamburger, carrousel adapté |
-| 480px | Petits mobiles | Tailles de police réduites |
+| Breakpoint | Cible          | Modifications principales        |
+| ---------- | -------------- | -------------------------------- |
+| 1024px     | Tablettes      | Grilles en 1 colonne             |
+| 768px      | Mobile         | Menu hamburger, carrousel adapté |
+| 480px      | Petits mobiles | Tailles de police réduites       |
 
 ### Tests recommandés
 
@@ -260,6 +279,7 @@ localStorage.setItem('portfolioVisits', visits);
 ### GitHub Pages
 
 1. **Pousser le code sur GitHub**
+
 ```bash
 git add .
 git commit -m "Portfolio complet avec toutes les fonctionnalités"
@@ -267,17 +287,20 @@ git push github main
 ```
 
 2. **Activer GitHub Pages**
+
 - Aller dans Settings > Pages
 - Source : Deploy from a branch
 - Branch : main / root
 - Save
 
 3. **Accéder au site**
+
 ```
 https://clementlacoste7.github.io/Site_Portefolio/
 ```
 
 ### Autres options
+
 - **Netlify** : Drag & drop du dossier
 - **Vercel** : Import du repo GitHub
 - **Heroku** : Avec un serveur web simple
@@ -287,6 +310,7 @@ https://clementlacoste7.github.io/Site_Portefolio/
 ## 🧪 Tests Effectués
 
 ### Tests Fonctionnels
+
 - ✅ Navigation entre sections
 - ✅ Carrousel (flèches, dots, swipe)
 - ✅ Filtres de projets
@@ -296,12 +320,14 @@ https://clementlacoste7.github.io/Site_Portefolio/
 - ✅ Animations au scroll
 
 ### Tests de Compatibilité
+
 - ✅ Chrome
 - ✅ Firefox
 - ✅ Safari
 - ✅ Edge
 
 ### Tests Responsive
+
 - ✅ Desktop (1920px)
 - ✅ Laptop (1366px)
 - ✅ Tablette (768px)
@@ -312,6 +338,7 @@ https://clementlacoste7.github.io/Site_Portefolio/
 ## 📊 Performance
 
 ### Optimisations appliquées
+
 - ✅ Lazy loading des images
 - ✅ Throttle sur les événements scroll
 - ✅ Minification potentielle du CSS/JS
@@ -319,6 +346,7 @@ https://clementlacoste7.github.io/Site_Portefolio/
 - ✅ Compression des images
 
 ### Améliorations futures
+
 - ⏳ Minification automatique avec build tools
 - ⏳ Compression Gzip
 - ⏳ Service Worker pour cache
@@ -329,6 +357,7 @@ https://clementlacoste7.github.io/Site_Portefolio/
 ## 🔐 Sécurité
 
 ### Bonnes pratiques appliquées
+
 - ✅ Validation côté client ET serveur (EmailJS)
 - ✅ Sanitization des inputs
 - ✅ HTTPS obligatoire (GitHub Pages)
@@ -342,29 +371,34 @@ https://clementlacoste7.github.io/Site_Portefolio/
 ### Critères du projet remplis
 
 #### ✅ Structure de base
+
 - Page HTML avec toutes les sections demandées
 - CSS moderne avec thème original (Glassmorphism)
 - Génération assistée par IA (Claude Code)
 
 #### ✅ Interactivité
+
 - Formulaire de contact fonctionnel avec EmailJS
 - Carrousel de projets avec navigation complète
 - Mode sombre/clair avec sauvegarde
 - Animations d'entrée fluides
 
 #### ✅ Fonctionnalités avancées
+
 - Système de filtrage par catégorie
 - Validation en temps réel
 - Compteur de visites (LocalStorage)
 - Responsive design complet
 
 #### ✅ Personnalisation et optimisation
+
 - Design unique et moderne
 - Performance optimisée
 - Testé sur plusieurs navigateurs
 - Documentation complète
 
 ### Technologies utilisées
+
 - **Frontend** : HTML5, CSS3, JavaScript Vanilla
 - **3D** : Three.js
 - **Email** : EmailJS
@@ -376,12 +410,15 @@ https://clementlacoste7.github.io/Site_Portefolio/
 ## 🐛 Problèmes Connus & Solutions
 
 ### Problème : EmailJS ne fonctionne pas
+
 **Solution :** Vérifier les IDs dans `js/main.js` (ligne 209)
 
 ### Problème : Le carrousel ne défile pas
+
 **Solution :** Vérifier que les classes CSS sont bien appliquées
 
 ### Problème : Le mode light ne s'active pas
+
 **Solution :** Vider le cache et LocalStorage du navigateur
 
 ---
